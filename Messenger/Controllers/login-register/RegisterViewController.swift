@@ -23,6 +23,9 @@ class RegisterViewController: UIViewController {
         imageView.image = UIImage(systemName: "person")
         imageView.tintColor = .gray
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
         return imageView
     }()
     
@@ -119,7 +122,7 @@ class RegisterViewController: UIViewController {
                                                             target: self,
                                                             action: #selector(didTapRegister))
         
-        registerButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         
         emailField.delegate = self
         passwordField.delegate = self
@@ -146,6 +149,7 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func didTapChangeProfilePic() {
+        presentPhotoActionSheet()
         print("Cambiando la imagen de perfil")
     }
     
@@ -161,6 +165,7 @@ class RegisterViewController: UIViewController {
                                      y: 90,
                                      width: size,
                                      height: size)
+        imageView.layer.cornerRadius = imageView.width/2.0
         
         FirstNameField.frame = CGRect(x: 30 ,
                                   y: imageView.bottom + 10,
@@ -190,7 +195,7 @@ class RegisterViewController: UIViewController {
     
     // MARK: - Validations
     
-    @objc private func loginButtonTapped(){
+    @objc private func registerButtonTapped(){
         //to get rid of the keyboard
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
@@ -223,7 +228,7 @@ class RegisterViewController: UIViewController {
     
     @objc private func didTapRegister() {
         let vc = RegisterViewController()
-        vc.title = "Create Ccount"
+        vc.title = "Create Account"
         navigationController?.pushViewController(vc, animated: true)
         
     }
@@ -243,9 +248,71 @@ extension RegisterViewController: UITextFieldDelegate {
         }
         else if textField == passwordField {
             //si ya esta en password entonces hace las veces del boton
-            loginButtonTapped()
+            registerButtonTapped()
             
         }
         return true
     }
 }
+
+// MARK : - Uploading profile picture
+
+extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    //action sheet: le dara al user la opcion entre tomar foto o subir foto
+    func presentPhotoActionSheet() {
+        let actionSheet = UIAlertController(title: "Profile Picture",
+                                            message: "How would you like to select a picture for your profile?",
+                                            preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                            style: .cancel))
+        actionSheet.addAction(UIAlertAction(title: "Take photo",
+                                            style: .default, handler: { [weak self] _ in
+                                            self?.presentCamera()
+            
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Choose Photo",
+                                            style: .default,
+                                            handler: { [weak self] _ in
+                                            self?.presentPhotoPicker()
+            
+        }))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    func presentCamera () {
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true // will allow the user to select a cropped square of the picture
+        present(vc, animated: true)
+        
+    }
+    
+    func presentPhotoPicker () {
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true // will allow the user to select a cropped square of the picture
+        present(vc, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        
+        guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
+            return
+        }
+        
+        self.imageView.image = selectedImage
+        
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+        
+    }
+    
+}
+
