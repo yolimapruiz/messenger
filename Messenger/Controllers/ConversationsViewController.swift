@@ -23,12 +23,12 @@ class ConversationsViewController: UIViewController {
     }
 
         private func validateAuth(){
-            //si hay un usuario actual, quiere decir que alguien tiene inciada una sesion
+            //si hay un usuario actual, quiere decir que alguien tiene iniciada una sesión
             if FirebaseAuth.Auth.auth().currentUser == nil {
                 
                 let vc = LoginViewController()
                 
-                //creacion de un navigation controller que va a embeber el controller qu eya tenemos vc
+                //creación de un navigation controller que va a embeber el controller que ya tenemos vc
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen // si no se especifica esto sale como una tarjeta a la que el user puede hacer swipe down
                 present(nav, animated: false)
