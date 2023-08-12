@@ -11,17 +11,25 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
 func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
 ) -> Bool {
     
     FirebaseApp.configure()
-    ApplicationDelegate.shared.application(
+    
+    FBSDKCoreKit.ApplicationDelegate.shared.application(
         application,
         didFinishLaunchingWithOptions: launchOptions
     )
+    
+  //  Settings.shared.appID
+
+//    ApplicationDelegate.shared.application(
+//        application,
+//        didFinishLaunchingWithOptions: launchOptions
+//    )
 
     return true
 }
