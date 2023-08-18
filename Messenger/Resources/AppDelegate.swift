@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import FBSDKCoreKit
 import FBSDKLoginKit
+import GoogleSignIn
 
 @UIApplicationMain
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -24,13 +25,13 @@ func application(
         didFinishLaunchingWithOptions: launchOptions
     )
     
-  //  Settings.shared.appID
-
-//    ApplicationDelegate.shared.application(
-//        application,
-//        didFinishLaunchingWithOptions: launchOptions
-//    )
-
+    GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+        if error != nil || user == nil {
+          // Show the app's signed-out state.
+        } else {
+          // Show the app's signed-in state.
+        }
+      }
     return true
 }
       
@@ -45,6 +46,21 @@ func application(
         sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
         annotation: options[UIApplication.OpenURLOptionsKey.annotation]
     )
+    var handled: Bool
+
+    handled = GIDSignIn.sharedInstance.handle(url)
+    if handled {
+      return true
+    }
+
+    return false
 }
+    
+    
+    
+   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+
+    }
+    
 }
 

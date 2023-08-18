@@ -7,6 +7,8 @@
 
 import UIKit
 import FirebaseAuth
+import FBSDKLoginKit
+import GoogleSignIn
 
 class ProfileViewController: UIViewController {
     
@@ -50,8 +52,14 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
+            //facebook log out
+            FBSDKLoginKit.LoginManager().logOut()
+            
+            //google logout
+            GIDSignIn.sharedInstance.signOut()
+            
             do {
-                try Auth.auth().signOut()
+                try FirebaseAuth.Auth.auth().signOut()
                 let vc = LoginViewController()
                 
                 //creacion de un navigation controller que va a embeber el controller qu eya tenemos vc
