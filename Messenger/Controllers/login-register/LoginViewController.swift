@@ -10,9 +10,11 @@ import Firebase
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
     
+    private let spinner = JGProgressHUD(style: .dark)
     // MARK: - Creation of subviews
     
     private let scrollView: UIScrollView = {
@@ -170,13 +172,19 @@ class LoginViewController: UIViewController {
             alertUserLogginError()
             return
         }
-        
+        spinner.show(in: view)
         //Firebase Log in
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] authDataResult, error in
             
             guard let strongSelf = self else {
                 return
             }
+            
+            DispatchQueue.main.async {
+                //esto lo mete en el hilo principal porque firebase se ejecuta en el background
+                strongSelf.spinner.dismiss()
+            }
+            
             
             guard let result = authDataResult, error == nil else {
                 print("Error singnin In with email: \(email)")
