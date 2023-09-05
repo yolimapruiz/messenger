@@ -24,6 +24,7 @@
 		95C2B9312A646E8900857513 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 95C2B9302A646E8900857513 /* GoogleService-Info.plist */; };
 		95C2B9352A64B6ED00857513 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9342A64B6ED00857513 /* DatabaseManager.swift */; };
 		95C2B9372A92B38400857513 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9362A92B38400857513 /* ChatViewController.swift */; };
+		95C2B9392A99701D00857513 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9382A99701D00857513 /* StorageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		95C2B9302A646E8900857513 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		95C2B9342A64B6ED00857513 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		95C2B9362A92B38400857513 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		95C2B9382A99701D00857513 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		A99A8A396D941CEE0881C1D5 /* Pods-Messenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.debug.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -146,6 +148,7 @@
 				95C2B9092A5CDDC800857513 /* SceneDelegate.swift */,
 				95C2B92E2A5E2EA100857513 /* Extensions.swift */,
 				95C2B9342A64B6ED00857513 /* DatabaseManager.swift */,
+				95C2B9382A99701D00857513 /* StorageManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				95C2B9082A5CDDC800857513 /* AppDelegate.swift in Sources */,
 				95C2B9372A92B38400857513 /* ChatViewController.swift in Sources */,
 				95C2B90A2A5CDDC800857513 /* SceneDelegate.swift in Sources */,
+				95C2B9392A99701D00857513 /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

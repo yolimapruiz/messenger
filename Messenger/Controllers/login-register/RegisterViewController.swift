@@ -219,6 +219,8 @@ class RegisterViewController: UIViewController {
             return
         }
         
+        
+        
         spinner.show(in: view)
         
         //Firebase Log in
@@ -226,7 +228,6 @@ class RegisterViewController: UIViewController {
         DatabaseManager.shared.userExists(with: email) { [weak self] exists in
             
             guard let strongSelf = self else {
-                
                 return
             }
             
@@ -249,8 +250,35 @@ class RegisterViewController: UIViewController {
                     return
                 }
                 
-                DatabaseManager.shared.insertUser(with: ChatAppUser(fisrtName: firstName,
-                                                                    lastName: lastName, emailAddress: email))
+                //insertamos el usuario en la base de datos
+                
+                let chatUser = ChatAppUser(fisrtName: firstName,
+                                           lastName: lastName,
+                                           emailAddress: email)
+                
+                DatabaseManager.shared.insertUser(with: chatUser, completion: { success in
+                    if success {
+                        //upload image
+                        guard let image = strongSelf.imageView.image,
+                        let data = image.pngData() else {
+                            
+                            return
+                        }
+                        
+                        let fileName = chatUser.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicture(with: data,
+                                                                   fileName: fileName,
+                                                                   completion: {result in
+                            switch result {
+                            case .success(let downloadURL):
+                                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                print(downloadURL)
+                            case .failure(let error):
+                                print("Storage Manager error: \(error)")
+                            }
+                        })
+                    }
+                })
                 strongSelf.navigationController?.dismiss(animated: true)
             }
             
