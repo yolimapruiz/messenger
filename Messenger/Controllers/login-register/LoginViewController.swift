@@ -192,6 +192,10 @@ class LoginViewController: UIViewController {
             }
             
             let user = result.user
+            
+            //lets save the users email address
+            UserDefaults.standard.set(email, forKey: "email")
+            
             print("Logged In User: \(user)")
             strongSelf.navigationController?.dismiss(animated: true)
         }
@@ -234,10 +238,16 @@ class LoginViewController: UIViewController {
           }
             print("User successfully singned in \(user)")
             
-            guard let email = user.profile?.email, let name = user.profile?.givenName, let lastName = user.profile?.familyName else {
+            guard let email = user.profile?.email,
+                  let name = user.profile?.givenName,
+                  let lastName = user.profile?.familyName else {
                 return
                 
             }
+            
+            //lets save the users email address
+            UserDefaults.standard.set(email, forKey: "email")
+            
         //validation to see if the email already exists in our database
             
             DatabaseManager.shared.userExists(with: email) { exists in
@@ -362,7 +372,8 @@ extension LoginViewController: LoginButtonDelegate {
                 return
             }
             
-            
+            //lets save the users email address
+            UserDefaults.standard.set(email, forKey: "email")
             
             DatabaseManager.shared.userExists(with: email) { exists in
                 if !exists {  //sino existe el usuario lo agregamos a la base de datos
@@ -426,8 +437,6 @@ extension LoginViewController: LoginButtonDelegate {
         }
        
     }
-    
-//login con google
     
     
 }
