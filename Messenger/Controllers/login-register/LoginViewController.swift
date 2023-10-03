@@ -195,6 +195,7 @@ class LoginViewController: UIViewController {
             
             //lets save the users email address
             UserDefaults.standard.set(email, forKey: "email")
+         
             
             print("Logged In User: \(user)")
             strongSelf.navigationController?.dismiss(animated: true)

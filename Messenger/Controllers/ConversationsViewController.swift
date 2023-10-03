@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
+
 class ConversationsViewController: UIViewController {
     
     private var spiner = JGProgressHUD(style: .dark)
@@ -59,19 +60,19 @@ class ConversationsViewController: UIViewController {
         validateAuth()
     }
 
-        private func validateAuth(){
-            //si hay un usuario actual, quiere decir que alguien tiene iniciada una sesión
-            if FirebaseAuth.Auth.auth().currentUser == nil {
-                
-                let vc = LoginViewController()
-                
-                //creación de un navigation controller que va a embeber el controller que ya tenemos vc
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen // si no se especifica esto sale como una tarjeta a la que el user puede hacer swipe down
-                present(nav, animated: false)
-            }
-        
-    }
+    private func validateAuth(){
+        //si hay un usuario actual, quiere decir que alguien tiene iniciada una sesión
+        if FirebaseAuth.Auth.auth().currentUser == nil {
+            
+            let vc = LoginViewController()
+            
+            //creación de un navigation controller que va a embeber el controller que ya tenemos vc
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen // si no se especifica esto sale como una tarjeta a la que el user puede hacer swipe down
+            present(nav, animated: false)
+        }
+    
+}
    
     private func setupTableView() {
         conversationsTableView.delegate = self
@@ -84,8 +85,27 @@ class ConversationsViewController: UIViewController {
     
     @objc private func didTapComposeButton(){
         let vc = NewConversationViewController()
+        //aca estamos accediendo al NewConversationViewController, especificamente al completions
+        vc.completion = {[weak self] result in
+           
+            self?.createNewConversation(result: result)
+        }
+        
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
+    }
+    
+    private func createNewConversation(result: [String: String]){
+        guard let name = result["name"],
+              let email = result["email"] else {
+            
+            return
+        }
+        let vc = ChatViewController(with: email)
+        vc.isNewConversation = true
+        vc.title = name
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -103,7 +123,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = ChatViewController()
+        let vc = ChatViewController(with: " ")
         vc.title = "Jenny Smith"
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
