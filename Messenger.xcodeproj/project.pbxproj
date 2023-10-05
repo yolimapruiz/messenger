@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		780705F1AC3B47FE229FD4E9 /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40F530B69DB4327B441E49CD /* Pods_Messenger.framework */; };
+		952C53DB2ACC4BB100EEA81E /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952C53DA2ACC4BB100EEA81E /* ConversationTableViewCell.swift */; };
 		95C2B9082A5CDDC800857513 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9072A5CDDC800857513 /* AppDelegate.swift */; };
 		95C2B90A2A5CDDC800857513 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9092A5CDDC800857513 /* SceneDelegate.swift */; };
 		95C2B90C2A5CDDC800857513 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B90B2A5CDDC800857513 /* ConversationsViewController.swift */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		40F530B69DB4327B441E49CD /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AA0E1A9D3C4D902AA696187 /* Pods-Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.release.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.release.xcconfig"; sourceTree = "<group>"; };
+		952C53DA2ACC4BB100EEA81E /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		95C2B9042A5CDDC800857513 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95C2B9072A5CDDC800857513 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		95C2B9092A5CDDC800857513 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			children = (
 				95C2B9202A5CDF3800857513 /* Storyboards */,
 				95C2B9102A5CDDCA00857513 /* Assets.xcassets */,
+				952C53DA2ACC4BB100EEA81E /* ConversationTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				95C2B90C2A5CDDC800857513 /* ConversationsViewController.swift in Sources */,
 				95C2B92C2A5CE35E00857513 /* ProfileViewController.swift in Sources */,
 				95C2B9082A5CDDC800857513 /* AppDelegate.swift in Sources */,
+				952C53DB2ACC4BB100EEA81E /* ConversationTableViewCell.swift in Sources */,
 				95C2B9372A92B38400857513 /* ChatViewController.swift in Sources */,
 				95C2B90A2A5CDDC800857513 /* SceneDelegate.swift in Sources */,
 				95C2B9392A99701D00857513 /* StorageManager.swift in Sources */,

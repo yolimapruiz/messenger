@@ -60,7 +60,8 @@ class ChatViewController: MessagesViewController {
     }()
     
     public var isNewConversation = false
-    public let otherUserEmail: String
+    private let otherUserEmail: String
+    public let conversationID: String?
     
     private var messages = [Message]()
     
@@ -71,19 +72,39 @@ class ChatViewController: MessagesViewController {
             print("no tengo email")
             return nil
         }
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
         print("tengo \(email)")
         return Sender(photoURL: "",
-                      senderId: email ,
-               displayName: "Joe")
+                      senderId: safeEmail ,
+               displayName: "me")
     }
 
-//    private var miSender: Sender? {
-//        return Sender(photoURL: "",
-//                      senderId: "joesmith@gmail.com" ,
-//               displayName: "Joe")
-//    }
+    private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
+        DatabaseManager.shared.getAllMessagesForConversation(with: id) { [weak self] result in
+            switch result {
+                
+            case .success(let messages):
+                guard !messages.isEmpty else {
+                    return
+                }
+                
+                self?.messages = messages
+                DispatchQueue.main.async {
+                    self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    
+                    if shouldScrollToBottom {
+                        self?.messagesCollectionView.scrollToBottom()
+                    }
+                    
+                }
+            case .failure(let error):
+                print("failed to get messages: \(error)")
+            }
+        }
+    }
     
-    init(with email: String) {
+    init(with email: String, id: String?) {
+        self.conversationID = id
         self.otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
         
@@ -107,6 +128,9 @@ class ChatViewController: MessagesViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         messageInputBar.inputTextView.becomeFirstResponder() // para que se despliege por defecto el teclado cuando carge la view
+        if let conversationID = conversationID {
+            listenForMessages(id: conversationID, shouldScrollToBottom: true)
+        }
     }
     
 }
@@ -129,7 +153,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                   messageId: messageId,
                                   sentDate: Date(),
                                   kind: .text(text))
-            DatabaseManager.shared.createsNewConversation(with: otherUserEmail, firstMessage: message) { success in
+            DatabaseManager.shared.createsNewConversation(with: otherUserEmail,
+                                                          name: self.title ?? "User",
+                                                          firstMessage: message) { success in
                 if success {
                     print("message sent")
                 }
@@ -164,7 +190,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             return sender
         }
         fatalError("Self sender is nil, email should be catched")
-        return Sender(photoURL: "", senderId: "123", displayName: "")
+        
     }
     
 
