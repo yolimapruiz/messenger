@@ -161,6 +161,8 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: - Validations
+
+    //inicio de sesion con correo electronico
     
     @objc private func loginButtonTapped(){
         //to get rid of the keyboard
@@ -193,8 +195,23 @@ class LoginViewController: UIViewController {
             
             let user = result.user
             
+            let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+            DatabaseManager.shared.getDataFromPath(path: safeEmail) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    guard let userData = data as? [String: Any],
+                          let firstName = userData["first_name"],
+                          let lastName = userData["last_name"] else {
+                        return
+                    }
+                    UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                case.failure(let error):
+                    print("failed to read data ")
+                }
+            }
             //lets save the users email address
             UserDefaults.standard.set(email, forKey: "email")
+           
          
             
             print("Logged In User: \(user)")
@@ -241,6 +258,7 @@ class LoginViewController: UIViewController {
             
             guard let email = user.profile?.email,
                   let name = user.profile?.givenName,
+                  
                   let lastName = user.profile?.familyName else {
                 return
                 
@@ -248,6 +266,7 @@ class LoginViewController: UIViewController {
             
             //lets save the users email address
             UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set("\(name) \(lastName)", forKey: "name")
             
         //validation to see if the email already exists in our database
             
@@ -375,6 +394,7 @@ extension LoginViewController: LoginButtonDelegate {
             
             //lets save the users email address
             UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
             
             DatabaseManager.shared.userExists(with: email) { exists in
                 if !exists {  //sino existe el usuario lo agregamos a la base de datos
