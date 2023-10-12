@@ -48,17 +48,48 @@ final class StorageManager {
     
     ///upload image that will be sent in a conversation message
     public func uploadMessagePhoto(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
-        storage.child("message_images\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
-            guard error == nil else {
-                //failed
-                print("failed to upload ")
-                completion(.failure(StorageErrors.failedToUpload))
-                return
+         storage.child("message_images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
+             guard error == nil else {
+                 //failed
+                 print("failed to upload ")
+                 completion(.failure(StorageErrors.failedToUpload))
+                 return
+             }
+             let uploadeddurl = metadata?.path
+             print("uploaded url: \(uploadeddurl)")
+    
+            self?.storage.child("message_images/\(fileName)").downloadURL { url, error in
+                guard let url = url else {
+                    print("Failed to get download url")
+                    completion(.failure(StorageErrors.failedToGetDownloadURL))
+                    return
+                }
+                
+                let urlString = url.absoluteString
+                print("download url returned: \(urlString)")
+                completion(.success(urlString))
             }
-            let uploadeddurl = metadata?.path
-            print("uploaded url: \(uploadeddurl)")
-            
-            self.storage.child("message_images\(fileName)").downloadURL { url, error in
+        })
+    }
+    
+    ///upload video that will be sent in a conversation message
+    
+    public func uploadMessageVideo(with fileUrl: URL, fileName: String, completion: @escaping UploadPictureCompletion) {
+        
+        print("llamaron a esta funcion de subir mensaje de video")
+        print ("esta es la url \(fileUrl)")
+        
+        storage.child("message_videos/\(fileName)").putFile(from: fileUrl, metadata: nil, completion: { [weak self] metadata, error in
+             guard error == nil else {
+                 //failed
+                 print("failed to upload video message")
+                 completion(.failure(StorageErrors.failedToUpload))
+                 return
+             }
+             let uploadeddurl = metadata?.path
+             print("la uploaded url es: \(uploadeddurl)")
+    
+            self?.storage.child("message_videos/\(fileName)").downloadURL { url, error in
                 guard let url = url else {
                     print("Failed to get download url")
                     completion(.failure(StorageErrors.failedToGetDownloadURL))

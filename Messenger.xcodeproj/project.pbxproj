@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		780705F1AC3B47FE229FD4E9 /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40F530B69DB4327B441E49CD /* Pods_Messenger.framework */; };
 		952C53DB2ACC4BB100EEA81E /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952C53DA2ACC4BB100EEA81E /* ConversationTableViewCell.swift */; };
+		955443DE2AD7662200DBD88E /* NewConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955443DD2AD7662200DBD88E /* NewConversationCell.swift */; };
 		95C2B9082A5CDDC800857513 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9072A5CDDC800857513 /* AppDelegate.swift */; };
 		95C2B90A2A5CDDC800857513 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B9092A5CDDC800857513 /* SceneDelegate.swift */; };
 		95C2B90C2A5CDDC800857513 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2B90B2A5CDDC800857513 /* ConversationsViewController.swift */; };
@@ -32,6 +33,7 @@
 		40F530B69DB4327B441E49CD /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AA0E1A9D3C4D902AA696187 /* Pods-Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.release.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		952C53DA2ACC4BB100EEA81E /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
+		955443DD2AD7662200DBD88E /* NewConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationCell.swift; sourceTree = "<group>"; };
 		95C2B9042A5CDDC800857513 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95C2B9072A5CDDC800857513 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		95C2B9092A5CDDC800857513 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				95C2B9202A5CDF3800857513 /* Storyboards */,
 				95C2B9102A5CDDCA00857513 /* Assets.xcassets */,
 				952C53DA2ACC4BB100EEA81E /* ConversationTableViewCell.swift */,
+				955443DD2AD7662200DBD88E /* NewConversationCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95C2B9222A5CE0A300857513 /* LoginViewController.swift in Sources */,
+				955443DE2AD7662200DBD88E /* NewConversationCell.swift in Sources */,
 				95C2B9352A64B6ED00857513 /* DatabaseManager.swift in Sources */,
 				95C2B9262A5CE20D00857513 /* PhotoViwerViewController.swift in Sources */,
 				95C2B92A2A5CE32D00857513 /* NewConversationViewController.swift in Sources */,
@@ -388,7 +392,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -442,7 +446,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -464,12 +468,13 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Messenger/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow acces to your camera to take a profile picture";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Please allow access to your microphone";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Please allow access to upload a profile picture";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -495,12 +500,13 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Messenger/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow acces to your camera to take a profile picture";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Please allow access to your microphone";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Please allow access to upload a profile picture";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

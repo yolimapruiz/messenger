@@ -144,9 +144,9 @@ class ConversationsViewController: UIViewController {
         present(navVC, animated: true)
     }
     
-    private func createNewConversation(result: [String: String]){
-        guard let name = result["name"],
-              let email = result["email"] else {
+    private func createNewConversation(result: SearchResults){
+        guard let name = result.name,
+              let email = result.email else {
             
             return
         }

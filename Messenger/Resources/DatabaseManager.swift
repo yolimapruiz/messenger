@@ -164,6 +164,7 @@ extension DatabaseManager {
                                        completion: @escaping (Bool) -> Void) {
         guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String,
         let currentName = UserDefaults.standard.value(forKey: "name") as? String else {
+            print("not current name")
             return
         }
         
@@ -395,7 +396,7 @@ extension DatabaseManager {
     
     ///Gets all messages for a given conversation
     public func getAllMessagesForConversation(with id: String, completion: @escaping (Result<[Message], Error>) -> Void) {
-        database.child("\(id)/messages").observe(.value) { snapshot in
+        database.child("\(id)/messages").observe(.value) { snapshot, error in
             guard let value = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
@@ -404,7 +405,6 @@ extension DatabaseManager {
             let messages: [Message] = value.compactMap { dictionary in
                 //comprobar que tenga todas las keys
                 guard  let name = dictionary["name"] as? String,
-                       
                        let isRead = dictionary["is_read"] as? Bool,
                        let messageId = dictionary["id"] as? String,
                        let content = dictionary["content"] as? String,
@@ -412,7 +412,9 @@ extension DatabaseManager {
                        let type = dictionary["type"] as? String,
                        let dateString = dictionary["date"] as? String,
                        let date = ChatViewController.dateFormatter.date(from: dateString) else {
+                    
                     print("no consegui ningun mensaje")
+                //    return nil
                     return nil
                 }
                 
@@ -422,6 +424,7 @@ extension DatabaseManager {
                     //photo
                     guard let imageUrl = URL(string: content),
                     let placeHolder = UIImage(systemName: "plus") else {
+                   //     return nil
                         return nil
                     }
                             
@@ -431,6 +434,19 @@ extension DatabaseManager {
                                               size: CGSize(width: 300, height: 300))
                     
                     kind = .photo(media)
+                }
+                else if type == "video" {
+                    //photo
+                    guard let videoUrl = URL(string: content),
+                          let placeHolder = UIImage(named: "video_placeholder") else {
+                        return nil
+                    }
+                    let media = Media(url: videoUrl,
+                                      image: nil,
+                                      placeholderImage: placeHolder,
+                                      size: CGSize(width: 300, height: 300))
+                    
+                    kind = .video(media)
                 }
                 else {
                     kind = .text(content)
@@ -493,7 +509,10 @@ extension DatabaseManager {
                     message = targetUrlString
                 }
                 break
-            case .video(_):
+            case .video(let mediaItem):
+                if let targetUrlString = mediaItem.url?.absoluteString {
+                    message = targetUrlString
+                }
                 break
             case .location(_):
                 break
