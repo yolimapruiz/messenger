@@ -88,10 +88,16 @@ class LoginViewController: UIViewController {
     
     private let GoogleLoginButton = GIDSignInButton()
     
+    private var loginObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
- //       GIDSignIn.sharedInstance?.presentingViewController = self
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotificacion, object: nil, queue: .main, using: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+        })
         
         view.backgroundColor = .systemPink
         title = "Log in"

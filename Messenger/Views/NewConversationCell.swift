@@ -53,8 +53,12 @@ class NewConversationCell: UITableViewCell {
     public func configure(with model: SearchResults) {
         self.userNameLabel.text = model.name
         
-        let path = "images/\(model.email)_profile_picture.png"
-        print("el path de la imageb es : \(path)")
+        guard let tempPath = model.email else {
+            return
+        }
+        
+        let path = "images/\(tempPath)_profile_picture.png"
+        print("el path de la imagen es : \(path)")
         StorageManager.shared.downloadURL(for: path) { [weak self] result in
             switch result {
                 

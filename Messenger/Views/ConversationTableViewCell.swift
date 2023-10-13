@@ -64,12 +64,16 @@ class ConversationTableViewCell: UITableViewCell {
     }
     
     public func configure(with model: Conversation) {
-        print("estan llamando al configure")
+        print("estan llamando al configure que sale bien")
         self.userMessageLabel.text = model.latesMessage.text
         self.userNameLabel.text = model.name
         
-        let path = "images/\(model.otherUserEmail)_profile_picture.png"
-        print("el path de la imageb es : \(path)")
+        guard let tempPath = model.otherUserEmail else {
+            return
+        }
+        
+        let path = "images/\(tempPath)_profile_picture.png"
+        print("el path de la imagen es : \(path)")
         StorageManager.shared.downloadURL(for: path) { [weak self] result in
             switch result {
                 
