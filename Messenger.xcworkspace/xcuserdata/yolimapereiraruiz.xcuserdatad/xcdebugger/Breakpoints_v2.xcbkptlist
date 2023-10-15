@@ -14,8 +14,8 @@
             filePath = "Messenger/Resources/DatabaseManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "554"
-            endingLineNumber = "554"
+            startingLineNumber = "560"
+            endingLineNumber = "560"
             landmarkName = "sendMessage(to:otherUserEmail:name:newMessage:completion:)"
             landmarkType = "7">
          </BreakpointContent>

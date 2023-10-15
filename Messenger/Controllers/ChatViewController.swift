@@ -76,7 +76,7 @@ class ChatViewController: MessagesViewController {
     
     public var isNewConversation = false
     private let otherUserEmail: String
-    public let conversationID: String?
+    public var conversationID: String?
     
     private var messages = [Message]()
     
@@ -250,37 +250,45 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
-        let selfSender = self.selfSender, let messageId = createMessageId() else {
-
+              let selfSender = self.selfSender,
+              let messageId = createMessageId() else {
             return
         }
-        
-        print("self Sender checked")
+    
         print("sending : \(text)")
-        //send message
+     
         let message = Message(sender: selfSender,
                               messageId: messageId,
                               sentDate: Date(),
                               kind: .text(text))
+        //send message
         
         if isNewConversation {
             //create convo in database
-            print("enter here")
-           
+            print("estoy creando la nueva conversacion")
             DatabaseManager.shared.createsNewConversation(with: otherUserEmail,
                                                           name: self.title ?? "User",
                                                           firstMessage: message) { [weak self] success in
                 if success {
                     print("message sent")
                     self?.isNewConversation = false
+                    let newConversationId = "conversation_\(message.messageId)"
+                    self?.conversationID = newConversationId
+                    self?.listenForMessages(id: newConversationId, shouldScrollToBottom: true)
+                
+                    DispatchQueue.main.async {
+                        self?.messageInputBar.inputTextView.text = nil
+                    }
+                    
                 }
                 else {
                     print("failed to send")
                 }
             }
         } else {
-            guard let conversationID = conversationID, let name = self.title else {
-                print("heyt")
+            guard let conversationID = conversationID,
+                    let name = self.title else {
+                print("no es una conversacion nueva")
                 return
             }
             //append to existing conversation data

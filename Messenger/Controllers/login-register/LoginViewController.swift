@@ -192,8 +192,7 @@ class LoginViewController: UIViewController {
                 //esto lo mete en el hilo principal porque firebase se ejecuta en el background
                 strongSelf.spinner.dismiss()
             }
-            
-            
+        
             guard let result = authDataResult, error == nil else {
                 print("Error singnin In with email: \(email)")
                 return
@@ -211,15 +210,14 @@ class LoginViewController: UIViewController {
                         return
                     }
                     UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                    print("tu  nombre es \(UserDefaults.standard.value(forKey: "name"))")
+                    
                 case.failure(let error):
-                    print("failed to read data ")
+                    print("failed to read data with error \(error)")
                 }
             }
             //lets save the users email address
             UserDefaults.standard.set(email, forKey: "email")
-           
-         
-            
             print("Logged In User: \(user)")
             strongSelf.navigationController?.dismiss(animated: true)
         }

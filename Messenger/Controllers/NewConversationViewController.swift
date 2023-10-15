@@ -183,6 +183,6 @@ extension NewConversationViewController: UISearchBarDelegate {
 }
 
 struct SearchResults {
-    let name: String?
-    let email: String?
+    let name: String
+    let email: String
 }
