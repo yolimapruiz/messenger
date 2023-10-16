@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseDatabase
 import MessageKit
+import CoreLocation
 
 final class DatabaseManager {
     //esto es un singleton dice que para acceso de escritura y lectura mas sencillo
@@ -452,6 +453,21 @@ extension DatabaseManager {
                     
                     kind = .video(media)
                 }
+                else if type == "location" {
+                    print("se que el tipo es location")
+                    let locationComponents = content.components(separatedBy: ", ")
+                    print("location Components \(locationComponents)")
+                    guard let longitud = Double(locationComponents[0]),
+                      let latitude = Double(locationComponents[1]) else {
+                        print("pero no pude unwrapped las coordenadas")
+                        return nil
+                    }
+                    
+                    let location = Location(location: CLLocation(latitude: latitude, longitude: longitud),
+                                            size: CGSize(width: 300, height: 300))
+                    
+                    kind = .location(location)
+                }
                 else {
                     kind = .text(content)
                 }
@@ -467,7 +483,7 @@ extension DatabaseManager {
                                kind: finalKind)
                 
             }
-            
+         
             completion(.success(messages))
         }
         
@@ -520,7 +536,9 @@ extension DatabaseManager {
                     message = targetUrlString
                 }
                 break
-            case .location(_):
+            case .location(let locationData):
+                let location = locationData.location
+                message = "\(location.coordinate.longitude), \(location.coordinate.latitude)"
                 break
             case .emoji(_):
                 break

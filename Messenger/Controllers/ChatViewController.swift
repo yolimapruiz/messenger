@@ -11,12 +11,32 @@ import InputBarAccessoryView
 import SDWebImage
 import AVFoundation
 import AVKit
+import CoreLocation
 
 struct Message: MessageType {
     public var sender: MessageKit.SenderType
     public var messageId: String
     public var sentDate: Date
     public var kind: MessageKind
+}
+
+struct Sender: SenderType {
+    public var photoURL: String
+    public var senderId: String
+    public var displayName: String
+}
+
+struct Media: MediaItem {
+    var url: URL?
+    var image: UIImage?
+    var placeholderImage: UIImage
+    var size: CGSize
+}
+
+struct Location: LocationItem {
+    var location: CLLocation
+    
+    var size: CGSize
 }
 
 extension MessageKind {
@@ -47,24 +67,6 @@ extension MessageKind {
     }
 }
 
-struct Sender: SenderType {
-    public var photoURL: String
-    public var senderId: String
-    public var displayName: String
-}
-
-struct Media: MediaItem {
-    var url: URL?
-    
-    var image: UIImage?
-    
-    var placeholderImage: UIImage
-    
-    var size: CGSize
-    
-    
-}
-
 class ChatViewController: MessagesViewController {
     public static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -81,14 +83,14 @@ class ChatViewController: MessagesViewController {
     private var messages = [Message]()
     
     private var selfSender: Sender? {
-        print("entre en selfsender")
+        
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
            
             print("no tengo email")
             return nil
         }
         let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
-        print("tengo \(email)")
+        //print("tengo \(email)")
         return Sender(photoURL: "",
                       senderId: safeEmail ,
                displayName: "me")
@@ -169,9 +171,52 @@ class ChatViewController: MessagesViewController {
             
         }))
         
+        actionSheet.addAction(UIAlertAction(title: "Location", style: .default, handler: { [weak self] _ in
+            self?.presentLocationPicker()
+        }))
+        
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         present(actionSheet, animated: true)
+    }
+    
+    private func presentLocationPicker() {
+        let vc = LocationPickerViewController(coordinates: nil)
+        vc.title = "Pick Location"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        vc.completion = {[weak self] selectedCoordinates in
+            guard let strongSelf = self else {
+                return
+            }
+            guard let messageId = strongSelf.createMessageId(),
+                  let conversationId = strongSelf.conversationID,
+                  let name = strongSelf.title,
+                  let selfSender = strongSelf.selfSender else {
+                return
+            }
+            
+            let longitude:  Double = selectedCoordinates.longitude
+            let latitude: Double = selectedCoordinates.latitude
+            print("Las coordenadas son: long= \(longitude) | lat= \(latitude)")
+            
+            let location = Location(location: CLLocation(latitude: latitude, longitude: longitude),
+                                 size: .zero)
+            
+            let message = Message(sender: selfSender,
+                                  messageId: messageId,
+                                  sentDate: Date(),
+                                  kind: .location(location))
+            
+            DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: strongSelf.otherUserEmail, name: name, newMessage: message) { success in
+                if success {
+                    print("Sent location message")
+                }
+                else {
+                    print("failed to send location message")
+                }
+            }
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func presentPhotoInputActionsheet() {
@@ -374,7 +419,6 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                             print("failed to send photo message")
                         }
                     }
-                    break
                     
                 case .failure(let error):
                     print("message photo upload error: \(error)")
@@ -475,33 +519,53 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
 }
 
 extension ChatViewController: MessageCellDelegate {
-    func didTapImage(in cell: MessageCollectionViewCell) {
+    
+    func didTapMessage(in cell: MessageCollectionViewCell) {
         guard let indexPath = messagesCollectionView.indexPath(for: cell) else {
             return
         }
         let message = messages[indexPath.section]
         switch message.kind {
             
-        case .photo(let media):
-            guard let imageUrl = media.url else {
-                return
-            }
+        case .location(let locationData):
+            let coordinates = locationData.location.coordinate
+            let vc = LocationPickerViewController(coordinates: coordinates)
+            vc.title = "Location"
             
-            let vc = PhotoViwerViewController(with: imageUrl)
             self.navigationController?.pushViewController(vc, animated: true)
-        
-        case .video(let media):
-            guard let videoUrl = media.url else {
-                return
-            }
-            
-            let vc = AVPlayerViewController()
-            vc.player = AVPlayer(url: videoUrl)
-            present(vc, animated: true)
-            
             
         default:
             break
         }
     }
-}
+        
+        func didTapImage(in cell: MessageCollectionViewCell) {
+            guard let indexPath = messagesCollectionView.indexPath(for: cell) else {
+                return
+            }
+            let message = messages[indexPath.section]
+            switch message.kind {
+                
+            case .photo(let media):
+                guard let imageUrl = media.url else {
+                    return
+                }
+                
+                let vc = PhotoViwerViewController(with: imageUrl)
+                self.navigationController?.pushViewController(vc, animated: true)
+                
+            case .video(let media):
+                guard let videoUrl = media.url else {
+                    return
+                }
+                
+                let vc = AVPlayerViewController()
+                vc.player = AVPlayer(url: videoUrl)
+                present(vc, animated: true)
+                
+                
+            default:
+                break
+            }
+        }
+    }

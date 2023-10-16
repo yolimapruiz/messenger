@@ -51,7 +51,7 @@ class NewConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         searchBar.delegate = self
         searchBar.becomeFirstResponder()
         navigationController?.navigationBar.topItem?.titleView = searchBar  //asi le asigna la posicion correcta a la search Bar
