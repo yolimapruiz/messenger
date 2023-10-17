@@ -51,7 +51,7 @@ class NewConversationCell: UITableViewCell {
     }
     
     public func configure(with model: SearchResults) {
-        self.userNameLabel.text = model.name
+        userNameLabel.text = model.name
         
         let path = "images/\(model.email)_profile_picture.png"
         print("el path de la imagen es : \(path)")

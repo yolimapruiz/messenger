@@ -9,21 +9,8 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
-
-struct Conversation {
-    let id: String
-    let name:String
-    let otherUserEmail: String?
-    let latesMessage: LatesMessage
-}
-
-struct LatesMessage {
-    let date: String
-    let text: String
-    let isRead: Bool
-}
-
-class ConversationsViewController: UIViewController {
+/// COntroler that show list of conversation
+final class ConversationsViewController: UIViewController {
     
     private var spiner = JGProgressHUD(style: .dark)
     private var conversations = [Conversation]()
@@ -59,7 +46,6 @@ class ConversationsViewController: UIViewController {
         view.addSubview(conversationsTableView)
         view.addSubview(noConversationsLabel)
         setupTableView()
-        fetchConversations()
         startListeningForConversations()
         
         loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotificacion, object: nil, queue: .main, using: { [weak self] _ in
@@ -72,8 +58,8 @@ class ConversationsViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-       conversationsTableView.frame = view.bounds
-      noConversationsLabel.frame = CGRect(x: 10,
+        conversationsTableView.frame = view.bounds
+        noConversationsLabel.frame = CGRect(x: 10,
                                             y: (view.heigth - 100)/2,
                                             width: view.width - 20,
                                             height: 100)
@@ -103,11 +89,14 @@ class ConversationsViewController: UIViewController {
                 
             case .success(let conversations):
                 guard !conversations.isEmpty else {
+                    self?.conversationsTableView.isHidden = true
+                    self?.noConversationsLabel.isHidden = false
                     print("no hay conversaciones")
                     return
                 }
+                self?.noConversationsLabel.isHidden = true
                 self?.conversationsTableView.isHidden = false
-            
+                
                 self?.conversations = conversations
                 
                 print("si hay conversaciones \(conversations.count)")
@@ -115,6 +104,8 @@ class ConversationsViewController: UIViewController {
                     self?.conversationsTableView.reloadData()
                 }
             case .failure(let error):
+                self?.conversationsTableView.isHidden = false
+                self?.noConversationsLabel.isHidden = false
                 print("failed to get convos: \(error)")
             }
         }
@@ -139,11 +130,8 @@ class ConversationsViewController: UIViewController {
         conversationsTableView.dataSource = self
     }
     
-    private func fetchConversations() {
-        conversationsTableView.isHidden = false
-    }
-    
     @objc private func didTapComposeButton(){
+ //       fatalError("Crash was triggered")
         let vc = NewConversationViewController()
         //aca estamos accediendo al NewConversationViewController, especificamente al completion
         vc.completion = {[weak self] result in
@@ -240,12 +228,13 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         if editingStyle == .delete {
             //begin delete
             let conversationId = conversations[indexPath.row].id
-            
             tableView.beginUpdates()
-            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
-                if success {
-                    self?.conversations.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .left)
+            self.conversations.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+            
+            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { success in
+                if !success {
+                    print("failed to delete")
                 }
             }
             tableView.endUpdates()

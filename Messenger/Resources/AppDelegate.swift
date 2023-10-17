@@ -57,7 +57,6 @@ func application(
 }
     
     
-    
    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
 
     }

@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class PhotoViwerViewController: UIViewController {
+final class PhotoViwerViewController: UIViewController {
 
     private let url: URL
 

@@ -11,17 +11,8 @@ import FBSDKLoginKit
 import GoogleSignIn
 import SDWebImage
 
-enum ProfileViewModelType {
-    case info, logout
-    
-}
 
-struct ProfileViewModel {
-    let viewModelType: ProfileViewModelType
-    let title: String
-    let handler: (() -> Void)?
-}
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     @IBOutlet var tableView: UITableView!
 
@@ -49,7 +40,12 @@ class ProfileViewController: UIViewController {
                 guard let strongSelf = self else {
                     return
                 }
+              
+                UserDefaults.standard.setValue(nil, forKey: "email")
+                UserDefaults.standard.setValue(nil, forKey: "name")
                 
+                let nombreEnCache = UserDefaults.standard.value(forKey: "name")
+                print("el nombre en la cache es : \(nombreEnCache)")
                 //facebook log out
                 FBSDKLoginKit.LoginManager().logOut()
                 

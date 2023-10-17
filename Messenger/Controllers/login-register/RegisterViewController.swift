@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
-class RegisterViewController: UIViewController {
+final class RegisterViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     // MARK: - Creation of subviews
@@ -199,6 +199,12 @@ class RegisterViewController: UIViewController {
     // MARK: - Validations
     
     @objc private func registerButtonTapped(){
+        
+        //clean the cache for the previous user
+        UserDefaults.standard.setValue(nil, forKey: "email")
+        UserDefaults.standard.setValue(nil, forKey: "name")
+        
+        
         //to get rid of the keyboard
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
@@ -249,7 +255,8 @@ class RegisterViewController: UIViewController {
                     print("Error creating Account")
                     return
                 }
-                
+                UserDefaults.standard.setValue(email, forKey: "email")
+                UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
                 //insertamos el usuario en la base de datos
                 
                 let chatUser = ChatAppUser(fisrtName: firstName,

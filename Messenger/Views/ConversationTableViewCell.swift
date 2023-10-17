@@ -65,8 +65,8 @@ class ConversationTableViewCell: UITableViewCell {
     
     public func configure(with model: Conversation) {
         print("estan llamando al configure que sale bien")
-        self.userMessageLabel.text = model.latesMessage.text
-        self.userNameLabel.text = model.name
+        userMessageLabel.text = model.latesMessage.text
+        userNameLabel.text = model.name
         
         guard let tempPath = model.otherUserEmail else {
             return

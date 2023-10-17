@@ -9,7 +9,7 @@ import UIKit
 import JGProgressHUD
 
 
-class NewConversationViewController: UIViewController {
+final class NewConversationViewController: UIViewController {
   
     
     public var completion: ((SearchResults) -> (Void))? //
@@ -171,18 +171,15 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     func updateUI(){
         if results.isEmpty {
-            self.noResultsLabel.isHidden = false
-            self.tableView.isHidden = true
+            noResultsLabel.isHidden = false
+            tableView.isHidden = true
         } else {
-            self.noResultsLabel.isHidden = true
-            self.tableView.isHidden = false
-            self.tableView.reloadData()
+            noResultsLabel.isHidden = true
+            tableView.isHidden = false
+            tableView.reloadData()
         }
     }
     
 }
 
-struct SearchResults {
-    let name: String
-    let email: String
-}
+
